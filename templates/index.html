@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hallucination Confidence Labeler</title>
+    <!-- Google Fonts: Outfit for titles, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved badge-icon"></i>
+                <span class="logo-text">Enterprise AI Guard</span>
+            </div>
+            <h1>AI Hallucination Confidence Labeler</h1>
+            <p class="subtitle">Ask any question and receive an AI-generated answer validated for reliability.</p>
+        </header>
+
+        <!-- Main Card -->
+        <main class="main-card">
+            <!-- Form Input Section -->
+            <section class="input-section">
+                <div class="input-wrapper">
+                    <textarea id="question-input" placeholder="Ask anything..." rows="4" required></textarea>
+                    <div class="input-focus-border"></div>
+                </div>
+                
+                <div class="action-bar">
+                    <div id="error-message" class="error-toast hidden">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span id="error-text"></span>
+                    </div>
+                    <button id="analyze-btn" class="btn btn-primary">
+                        <span id="btn-text">Analyze Answer</span>
+                        <div id="spinner" class="spinner hidden"></div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section (Initially Hidden) -->
+            <section id="results-section" class="results-container hidden">
+                <div class="divider"></div>
+                
+                <!-- Prompt & Answer Block -->
+                <div class="result-block animate-fade-in">
+                    <div class="block-header">
+                        <i class="fa-solid fa-circle-question question-icon"></i>
+                        <h3>Your Question</h3>
+                    </div>
+                    <div id="display-question" class="content-box question-box"></div>
+                </div>
+
+                <div class="result-block animate-fade-in delay-1">
+                    <div class="block-header">
+                        <i class="fa-solid fa-robot ai-icon"></i>
+                        <h3>AI Answer</h3>
+                    </div>
+                    <div id="display-answer" class="content-box answer-box"></div>
+                </div>
+
+                <!-- Evidence Verification Section -->
+                <div class="result-block animate-fade-in delay-2">
+                    <div class="block-header">
+                        <i class="fa-solid fa-file-shield evidence-icon"></i>
+                        <h3>Evidence Verification</h3>
+                    </div>
+                    <div id="display-evidence" class="evidence-container"></div>
+                </div>
+
+                <!-- Verification Result Section -->
+                <div class="result-block animate-fade-in delay-3">
+                    <div class="block-header">
+                        <i class="fa-solid fa-square-check verifier-icon"></i>
+                        <h3>Verification Result</h3>
+                    </div>
+                    <div class="content-box verification-box">
+                        <div class="verification-header">
+                            <div class="label-status">
+                                <span class="status-label-title">Reliability Label:</span>
+                                <span id="verification-badge" class="verification-badge label-certain">Certain</span>
+                            </div>
+                            
+                            <div class="confidence-container">
+                                <div class="confidence-label-row">
+                                    <span class="confidence-title">Confidence:</span>
+                                    <span id="confidence-percentage" class="confidence-value">0%</span>
+                                </div>
+                                <div class="confidence-bar-bg">
+                                    <div id="confidence-bar" class="confidence-bar-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-detail">
+                            <div class="detail-section">
+                                <h4 class="section-subtitle"><i class="fa-solid fa-circle-info"></i> Reason</h4>
+                                <p id="verification-reason" class="reason-text"></p>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4 class="section-subtitle"><i class="fa-solid fa-list-check"></i> Supported Facts</h4>
+                                <ul id="supported-facts-list" class="facts-list">
+                                    <!-- Dynamic bullets -->
+                                </ul>
+                            </div>
+                            
+                            <div id="contradictions-section" class="detail-section contradiction-container hidden">
+                                <h4 class="section-subtitle warning-subtitle"><i class="fa-solid fa-triangle-exclamation"></i> Contradictions Detected</h4>
+                                <ul id="contradictions-list" class="contradictions-list">
+                                    <!-- Dynamic bullets -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Responsible Enterprise AI. Phase 3 Prototype.</p>
+        </footer>
+    </div>
+
+    <!-- Script -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
