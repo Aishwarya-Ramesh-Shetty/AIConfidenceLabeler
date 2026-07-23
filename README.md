@@ -1,275 +1,450 @@
+
+
+<div align="center">
+
 # 🛡️ AI Hallucination Confidence Labeler
 
-An AI-powered fact verification system that evaluates the reliability of AI-generated responses by validating them against trusted web sources.
+### Know when to trust AI.
 
-Instead of blindly trusting an AI response, the application retrieves supporting evidence from reliable sources and assigns a confidence label with a clear explanation, helping users determine whether an answer is trustworthy.
+An evidence-grounded AI verification system that evaluates responses against real-world sources and clearly communicates how reliable an answer is.
 
----
+**Responsible Enterprise AI · TCS Tech Day Hackathon**
 
-## 📖 Problem Statement
+<br/>
 
-Large Language Models (LLMs) can sometimes generate **hallucinations**—responses that sound convincing but are factually incorrect or unsupported.
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google-Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Tavily](https://img.shields.io/badge/Tavily-Web_Search-111827?style=for-the-badge)
+![Tailwind](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
-This project addresses that challenge by introducing a **Confidence Labeling System** that verifies AI-generated answers using external evidence and classifies them into one of three reliability levels:
-
-- 🟢 Certain
-- 🟡 Uncertain
-- 🔴 Needs Verification
-
----
-
-## ✨ Features
-
-- 🤖 Generate AI responses using Gemini
-- 🔍 Retrieve trusted evidence using Tavily Search API
-- 📚 Compare AI responses against retrieved evidence
-- 🛡️ Assign reliability labels
-- 💬 Provide clear explanations for every decision
-- 📄 Display supporting evidence and source links
-- ⚡ Fast and intuitive user interface
+</div>
 
 ---
 
-## 🏗️ System Architecture
+## 💡 The Problem
+
+Large Language Models are powerful, but they can **hallucinate** — generating information that sounds convincing while being inaccurate, unsupported, or completely fabricated.
+
+The bigger problem?
+
+> **AI often presents incorrect information with the same confidence as correct information.**
+
+For users, there is often no simple way to distinguish between:
+
+> ✅ *"This answer is backed by reliable evidence."*
+
+and
+
+> ⚠️ *"This sounds correct, but there isn't enough evidence to trust it."*
+
+**AI Hallucination Confidence Labeler** is designed to bridge that trust gap.
+
+---
+
+## 🎯 Our Solution
+
+Instead of asking users to blindly trust an AI response, our system grounds answers in **real-world evidence**.
+
+For every question, the application:
+
+1. 🔎 Searches the web for relevant evidence
+2. 📚 Collects information from external sources
+3. 🤖 Provides the evidence to Gemini
+4. 🧠 Evaluates how strongly the evidence supports the response
+5. 🛡️ Assigns an easy-to-understand reliability label
+6. 💬 Explains *why* that label was assigned
+
+The result is not just an AI answer — it is an **answer with evidence and context about its reliability**.
+
+---
+
+## 🛡️ Reliability Labels
+
+| Label | Meaning |
+| :--- | :--- |
+| 🟢 **Certain** | Strong and consistent evidence supports the answer |
+| 🟡 **Uncertain** | Evidence exists but is incomplete, limited, or partially supportive |
+| 🔴 **Needs Verification** | Evidence is insufficient, conflicting, or does not support the answer |
+
+This gives users an immediate visual indication of how much confidence they should place in the response.
+
+---
+
+## ⚙️ How It Works
 
 ```text
-                User Question
-                      │
-                      ▼
-           Tavily Search API
-      (Retrieve Trusted Evidence)
-                      │
-                      ▼
-          Gemini 2.5 Flash Model
-       (Answer using Retrieved Evidence)
-                      │
-                      ▼
-         Confidence Classification
-                      │
-                      ▼
-        Certain / Uncertain / Needs Verification
-                      │
-                      ▼
-       Explanation + Supporting Sources
+                         ┌─────────────────┐
+                         │      USER       │
+                         └────────┬────────┘
+                                  │
+                                  │ Question
+                                  ▼
+                    ┌──────────────────────────┐
+                    │      REACT FRONTEND      │
+                    └────────────┬─────────────┘
+                                 │
+                                 ▼
+                    ┌──────────────────────────┐
+                    │    NODE.JS / EXPRESS     │
+                    │         BACKEND          │
+                    └────────────┬─────────────┘
+                                 │
+                                 ▼
+                    ┌──────────────────────────┐
+                    │      TAVILY SEARCH       │
+                    │                          │
+                    │  Retrieve web evidence   │
+                    └────────────┬─────────────┘
+                                 │
+                                 │ Evidence
+                                 ▼
+                    ┌──────────────────────────┐
+                    │      GEMINI 2.5 FLASH    │
+                    │                          │
+                    │ Evidence-grounded        │
+                    │ reasoning & generation   │
+                    └────────────┬─────────────┘
+                                 │
+                                 ▼
+                    ┌──────────────────────────┐
+                    │  RELIABILITY ANALYSIS    │
+                    │                          │
+                    │ 🟢 Certain               │
+                    │ 🟡 Uncertain             │
+                    │ 🔴 Needs Verification    │
+                    └────────────┬─────────────┘
+                                 │
+                                 ▼
+                    ┌──────────────────────────┐
+                    │ Answer + Reason + Sources│
+                    └──────────────────────────┘
 ```
 
 ---
 
-## 🚀 Tech Stack
+## 🧠 Why Evidence First?
 
-### Frontend
-- React.js
-- Vite
-- Tailwind CSS
-- Axios
+A simple hallucination checker could ask an LLM:
 
-### Backend
-- Node.js
-- Express.js
+> *"Is your previous answer correct?"*
 
-### AI & Search
-- Google Gemini 2.5 Flash
-- Tavily Search API
+But this still relies on the model's internal knowledge and can reproduce the same hallucination.
+
+Our approach follows an **evidence-first architecture**.
+
+```text
+Question
+   ↓
+Retrieve Evidence
+   ↓
+Ground AI with Evidence
+   ↓
+Generate Answer
+   ↓
+Evaluate Reliability
+```
+
+Gemini is instructed to reason from the retrieved evidence rather than relying solely on its internal knowledge.
+
+This makes the system more:
+
+- 🔎 **Verifiable**
+- 📚 **Evidence-grounded**
+- 💡 **Explainable**
+- 🛡️ **Trust-aware**
 
 ---
 
-## 📂 Project Structure
+## 🔍 Example
 
-```
-AI-Hallucination-Confidence-Labeler/
+### User Question
+
+> **Who created the Python programming language?**
+
+### Retrieved Evidence
+
+The system searches external sources and retrieves evidence identifying **Guido van Rossum** as Python's creator.
+
+### AI Response
+
+> Python was created by Guido van Rossum.
+
+### Reliability
+
+> 🟢 **Certain — 96%**
+
+### Why?
+
+> Multiple relevant sources consistently support the claim that Guido van Rossum created Python.
+
+The user receives not only an answer, but also an indication of **why that answer can be trusted**.
+
+---
+
+## ✨ Core Features
+
+- 🤖 **AI-powered responses** using Google Gemini
+- 🌐 **Real-time evidence retrieval** using Tavily Search
+- 🛡️ **Three-level reliability classification**
+- 📊 **Confidence indication**
+- 💬 **Human-readable reasoning**
+- 🔗 **Supporting source references**
+- ⚡ **Fast response pipeline**
+- 📱 **Responsive React interface**
+- 🔐 **Secure API key handling through environment variables**
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| 🎨 Frontend | React + Vite | Interactive user interface |
+| 💅 Styling | Tailwind CSS | Responsive UI design |
+| ⚙️ Backend | Node.js + Express | API and application logic |
+| 🧠 AI | Gemini 2.5 Flash | Evidence-grounded reasoning |
+| 🔎 Search | Tavily Search API | Real-time evidence retrieval |
+| 🔄 Requests | Axios | Frontend/backend communication |
+
+---
+
+## 📁 Project Structure
+
+```text
+ai-hallucination-confidence-labeler/
 │
 ├── frontend/
 │   ├── src/
-│   ├── components/
-│   ├── pages/
-│   └── App.jsx
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   ├── package.json
+│   └── vite.config.js
 │
 ├── backend/
 │   ├── controllers/
-│   ├── services/
 │   ├── routes/
-│   ├── utils/
-│   └── server.js
+│   ├── services/
+│   │   ├── geminiService.js
+│   │   └── tavilyService.js
+│   ├── server.js
+│   └── package.json
 │
-├── README.md
-└── .env
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-## ⚙️ Workflow
+## 🔄 Verification Pipeline
 
-### Step 1
+### 01 — Ask
 
-The user submits a question.
+The user enters a question.
 
-Example:
-
-```
-Who invented Python?
+```text
+"What is the capital of Australia?"
 ```
 
----
+### 02 — Retrieve
 
-### Step 2
+Tavily searches for relevant information and returns evidence from web sources.
 
-The backend retrieves relevant evidence from trusted sources using the Tavily Search API.
+### 03 — Ground
 
-Example Sources:
+The retrieved evidence is supplied to Gemini as context.
 
-- Python.org
-- Britannica
-- Wikipedia
+Gemini is instructed to reason **only from the available evidence**.
 
----
+### 04 — Evaluate
 
-### Step 3
+The system determines whether the evidence:
 
-The retrieved evidence is passed to Gemini.
+```text
+Fully supports the response
+        ↓
+🟢 CERTAIN
 
-Gemini is instructed to answer **only using the supplied evidence**, minimizing hallucinations.
 
----
+Partially supports the response
+        ↓
+🟡 UNCERTAIN
 
-### Step 4
 
-The system evaluates the quality and consistency of the evidence and assigns one of the following labels:
-
-| Label | Meaning |
-|-------|---------|
-| 🟢 Certain | Strong evidence supports the answer |
-| 🟡 Uncertain | Evidence is limited or partially supports the answer |
-| 🔴 Needs Verification | Evidence contradicts or does not support the answer |
-
----
-
-### Step 5
-
-The application displays:
-
-- AI Answer
-- Reliability Label
-- Confidence Score
-- Explanation
-- Supporting Facts
-- Source Links
-
----
-
-## 🖥️ Sample Output
-
-**Question**
-
-```
-Who invented Python?
+Does not support / contradicts the response
+        ↓
+🔴 NEEDS VERIFICATION
 ```
 
-**Answer**
+### 05 — Explain
 
-```
-Python was created by Guido van Rossum.
-```
+The user receives:
 
-**Reliability**
-
-```
-🟢 Certain
-```
-
-**Confidence**
-
-```
-97%
-```
-
-**Reason**
-
-```
-The answer is consistently supported by multiple trusted sources including Python.org and Britannica.
+```text
+AI Answer
+    +
+Reliability Label
+    +
+Confidence
+    +
+Reason
+    +
+Supporting Sources
 ```
 
 ---
 
-## 📦 Installation
+## 🚀 Getting Started
 
-### Clone Repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/AI-Hallucination-Confidence-Labeler.git
+git clone https://github.com/YOUR_USERNAME/ai-hallucination-confidence-labeler.git
+
+cd ai-hallucination-confidence-labeler
 ```
 
-### Navigate to Project
+### 2. Install Backend Dependencies
 
 ```bash
-cd AI-Hallucination-Confidence-Labeler
+cd backend
+npm install
 ```
 
-### Install Frontend
+### 3. Install Frontend Dependencies
+
+```bash
+cd ../frontend
+npm install
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env` file inside the `backend` directory:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+TAVILY_API_KEY=your_tavily_api_key
+PORT=5000
+```
+
+> ⚠️ Never commit your `.env` file or API keys to GitHub.
+
+### 5. Start the Backend
+
+```bash
+cd backend
+npm run dev
+```
+
+### 6. Start the Frontend
+
+Open another terminal:
 
 ```bash
 cd frontend
-npm install
-```
-
-### Install Backend
-
-```bash
-cd ../backend
-npm install
-```
-
----
-
-## 🔑 Environment Variables
-
-Create a `.env` file inside the backend folder.
-
-```env
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-
-TAVILY_API_KEY=YOUR_TAVILY_API_KEY
-```
-
----
-
-## ▶️ Run the Application
-
-Backend
-
-```bash
 npm run dev
 ```
 
+Open the local URL displayed by Vite in your browser.
+
+---
+
+## 🔌 API
+
+### Analyze a Question
+
+```http
+POST /api/analyze
+```
+
+#### Request
+
+```json
+{
+  "question": "Who created Python?"
+}
+```
+
+#### Example Response
+
+```json
+{
+  "question": "Who created Python?",
+  "answer": "Python was created by Guido van Rossum.",
+  "label": "Certain",
+  "confidence": 96,
+  "reason": "Multiple retrieved sources consistently support the answer.",
+  "sources": [
+    {
+      "title": "Source title",
+      "url": "Source URL"
+    }
+  ]
+}
+```
+
+---
+
+## 🔐 Security
+
+API keys are stored only on the backend using environment variables.
+
+```text
 Frontend
-
-```bash
-npm run dev
+   ↓
+Backend
+   ↓
+Gemini / Tavily
 ```
 
----
-
-## 🎯 Future Improvements
-
-- Support document-based fact verification
-- Multi-language verification
-- Domain-specific verification (Medical, Legal, Finance)
-- Source credibility scoring
-- Fact-level highlighting within responses
-- Historical verification reports
+The frontend never directly exposes Gemini or Tavily credentials.
 
 ---
 
-## 💡 Key Highlights
+## 🌍 Why This Matters
 
-- Reduces AI hallucinations through Retrieval-Augmented Generation (RAG)
-- Verifies AI-generated responses using trusted external evidence
-- Improves transparency by explaining confidence decisions
-- Encourages responsible and trustworthy AI interactions
+As AI becomes increasingly integrated into enterprise workflows, generating an answer is no longer enough.
+
+AI systems also need to communicate:
+
+> **"Why should you trust this answer?"**
+
+AI Hallucination Confidence Labeler demonstrates how **retrieval, evidence grounding, confidence labeling, and explainability** can work together to create more responsible AI experiences.
+
+---
+
+## 🔮 Future Scope
+
+- 📄 Verify answers against uploaded documents
+- 🏢 Enterprise knowledge-base integration
+- 🧩 Claim-by-claim verification
+- 🌐 Multi-language fact verification
+- 📊 Advanced source credibility scoring
+- 🏥 Domain-specific verification for healthcare
+- ⚖️ Legal and financial information verification
+- 📜 Verification history and audit trails
 
 ---
 
-## 👩‍💻 Team
+## 🏆 Hackathon
 
-Built for the **TCS Tech Day Hackathon** under the theme **Responsible Enterprise AI**.
+Developed for the **TCS Tech Day Hackathon**
+
+**Theme:** Responsible Enterprise AI  
+**Problem:** AI Hallucination Confidence Labeler
 
 ---
+
+<div align="center">
+
+### 🛡️ Don't just generate. Verify.
+
+**AI Hallucination Confidence Labeler**
+
+Built with React · Node.js · Gemini · Tavily
+
+</div>
